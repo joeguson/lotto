@@ -1,0 +1,8 @@
+# intellij
+.idea/
+*.iml
+.DS_Store
+client/node_modules/
+server/node_modules/
+server/config.json
+*.http

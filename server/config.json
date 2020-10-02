@@ -1,0 +1,13 @@
+{
+  "db_config": {
+    "connectionLimit" : 500,
+    "connectTimeout" : 3600000,
+    "acquireTimeout" : 3600000,
+    "timeout" : 3600000,
+    "host": "112.157.39.243",
+    "user": "root",
+    "password": "roqkfwkemf!@",
+    "database": "b_test"
+  },
+  "port": 3001
+}
