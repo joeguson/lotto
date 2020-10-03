@@ -8,10 +8,3 @@ exports.selectHistoryCombById = (id) => daoUtil.doQuery(
     WHERE id = (SELECT comb_id FROM lotto_history WHERE id = ?)`,
     id
 );
-
-exports.selectHistoryCombByDate = (date) => daoUtil.doQuery(
-    `SELECT * 
-    FROM lotto_all 
-    WHERE id = (SELECT comb_id FROM lotto_history WHERE date = ?)`,
-    date
-);

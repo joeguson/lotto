@@ -7,9 +7,9 @@ const scenarioService = require('../services/scenarioService');
 /* ===== home ===== */
 
 route.get('/', function (req, res) {
-    historyService.getHistoryCombById(912)
-        .then((result) => {
-            res.json(result);
+    historyService.getHistoryCombById(182)
+        .then((comb) => {
+            res.json(comb);
         });
 });
 
