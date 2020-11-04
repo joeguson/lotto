@@ -3,13 +3,48 @@
  * All rights reserved.
  */
 
-exports.parseCombination = function (comb) {
-    return {
-        fir : comb[0].fir,
-        sec : comb[0].sec,
-        thi : comb[0].thi,
-        fou : comb[0].fou,
-        fif : comb[0].fif,
-        six : comb[0].six
-    }
+exports.parseCombination = (comb) => {
+    return comb.date ? parseFullComb(comb) : parseCombNumbersOnly(comb);
 };
+
+parseFullComb = (comb) => {
+    return {
+        id : comb.id,
+        fir : comb.fir,
+        sec : comb.sec,
+        thi : comb.thi,
+        fou : comb.fou,
+        fif : comb.fif,
+        six : comb.six
+    }
+}
+
+parseCombNumbersOnly = (comb) => {
+    return {
+        fir : comb.fir,
+        sec : comb.sec,
+        thi : comb.thi,
+        fou : comb.fou,
+        fif : comb.fif,
+        six : comb.six
+    }
+}
+
+exports.parseHistory = (history) => {
+    const historyObj = {};
+    historyObj.id = history.id;
+    historyObj.comb_id = history.comb_id;
+
+    historyObj.combination = [];
+    historyObj.combination.push(history.fir);
+    historyObj.combination.push(history.sec);
+    historyObj.combination.push(history.thi);
+    historyObj.combination.push(history.fou);
+    historyObj.combination.push(history.fif);
+    historyObj.combination.push(history.six);
+
+    historyObj.sum = history.sum;
+    historyObj.date = history.date;
+
+    return historyObj;
+}
