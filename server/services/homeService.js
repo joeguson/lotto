@@ -28,15 +28,15 @@ exports.drawLotto = async () => {
         if (testResult) possibleCombinations.push(newCombinationArr);
     }
 
-    // const possibleCombinationsMap = new Map();
-    // for (let i = 0; i < possibleCombinations.length; i++) {
-    //     const stringifiedArr = JSON.stringify(possibleCombinations[i]);
-    //     if (possibleCombinationsMap.has(stringifiedArr)) possibleCombinationsMap.set(stringifiedArr, possibleCombinationsMap.get(stringifiedArr) + 1);
-    //     else possibleCombinationsMap.set(stringifiedArr, 1);
-    // }
-    //
-    // console.log(possibleCombinationsMap);
-    // console.log(possibleCombinationsMap.size);
+    const possibleCombinationsMap = new Map();
+    for (let i = 0; i < possibleCombinations.length; i++) {
+        const stringifiedArr = JSON.stringify(possibleCombinations[i]);
+        if (possibleCombinationsMap.has(stringifiedArr)) possibleCombinationsMap.set(stringifiedArr, possibleCombinationsMap.get(stringifiedArr) + 1);
+        else possibleCombinationsMap.set(stringifiedArr, 1);
+    }
+
+    console.log(possibleCombinationsMap);
+    console.log(possibleCombinationsMap.size);
 
     console.log(possibleCombinations);
 
