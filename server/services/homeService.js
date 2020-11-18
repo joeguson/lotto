@@ -39,6 +39,7 @@ exports.drawLotto = async () => {
     console.log(possibleCombinationsMap.size);
 
     console.log(possibleCombinations);
+    //asdf
 
     return possibleCombinations;
 };
