@@ -7,11 +7,11 @@ route.get('/', function (req, res) {
     console.log("at /home");
     homeService.drawLotto()
         .then((result) => {
-            console.log(result);
+            res.json(result);
         })
 });
 
-route.all('*', function(req, res){
+route.all('*', function (req, res) {
     res.redirect('/history');
 });
 

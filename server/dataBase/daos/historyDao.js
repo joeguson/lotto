@@ -25,9 +25,20 @@ exports.selectHistoryCombByDate = (date) => daoUtil.doQuery(
     date
 );
 
-exports.hasAppeared = (id) => daoUtil.doQuery(
+exports.hasAppearedById = (id) => daoUtil.doQuery(
     `select id from history where comb_id = ?`,
     id
+);
+
+exports.hasAppearedByComb = (comb) => daoUtil.doQuery(
+    `select id from history_view 
+    where fir = ? AND
+    sec = ? AND
+    thi = ? AND
+    fou = ? AND 
+    fif = ? AND 
+    six = ?`,
+    comb
 );
 
 exports.isConsecutive = (id) => daoUtil.doQuery(

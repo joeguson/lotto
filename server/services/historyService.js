@@ -4,7 +4,7 @@ const historyAnalyzeDao = require('../dataBase/daos/historyAnalyzeDao');
 const combParser = require('../dataBase/parsers/combParser');
 
 exports.getHistory = async () => {
-    return (await historyDao.selectAllHistory()).map(e => combParser.parseCombination(e));
+    return (await historyDao.selectAllHistory()).map(e => combParser.parseHistory(e));
 };
 
 exports.getHistoryCombById = async (id) => {
@@ -27,39 +27,18 @@ exports.removeInvalidComb = async (ids) => {
     return validComb;
 }
 
-exports.postNumberAnalyze = async (num) => {
-    const reducer = (acc, cur) => acc + cur;
-    const analysis = {};
-    const cycles = [];
-    analysis.percentage = 0;
-    analysis.cycle = 0;
-    const lastRound = (await historyDao.selectLatestHistoryId())[0].lastRound;
-    const result = (await historyDao.selectHistoryCombWith(num)).map(e => {
-        return e.id;
-    });
-    analysis.appear = result.length;
-    analysis.percentage = (result.length / lastRound) * 100;
-    for (let i = 0; i < result.length - 1; i++) {
-        cycles[i] = result[i + 1] - result[i];
-    }
-    analysis.cycle = cycles.reduce(reducer) / cycles.length;
-    console.log(analysis);
-    const analysisResult = await historyAnalyzeDao.insertHistoryAnalyze(analysis.appear, analysis.percentage, analysis.cycle)
-    console.log(analysisResult);
-    return analysisResult;
-};
-
 exports.getNumberPoolByCycle = async () => {
-    const history = (await historyDao.selectAllHistory()).map(e => combParser.parseHistory(e));
+    const history = await __getHistory();
     const cycleArr = [];
     for (let i = 0; i < 45; i++) {
         cycleArr[i] = [];
     }
+    const lastGame = history.length;
 
     let minSum = 1000;
     let maxSum = 0;
 
-    for (let i = 0; i < history.length; i++) {
+    for (let i = 0; i < lastGame; i++) {
         if (history[i].sum > maxSum) maxSum = history[i].sum;
         if (history[i].sum < minSum) minSum = history[i].sum;
 
@@ -69,19 +48,51 @@ exports.getNumberPoolByCycle = async () => {
         }
     }
 
+    const cycleStatuses = [];
     for (let i = 0; i < cycleArr.length; i++) {
-        console.log(getCycles(cycleArr[i]));
+        const cycleStatus = getCycles(cycleArr[i], lastGame);
+        cycleStatus.number = i + 1;
+        cycleStatuses.push(cycleStatus);
     }
 
+    const absenceRank = [];
+    for (let i = 0; i < cycleStatuses.length; i++) {
+        if (absenceRank[cycleStatuses[i].absenceTillNow] == null) {
+            absenceRank[cycleStatuses[i].absenceTillNow] = [];
+        }
+        absenceRank[cycleStatuses[i].absenceTillNow].push(cycleStatuses[i].number);
+
+    }
+
+    for (let i = absenceRank.length - 1; i >= 0; i--) {
+        if (absenceRank[i] == null) absenceRank.splice(i, 1);
+    }
+
+    const numberPool_cycle = [];
+    let count = 0;
+    for (let j = absenceRank.length - 1; j >= 0; j--) {
+        const cycleGroup = absenceRank[j];
+        for (let k = 0; k < cycleGroup.length; k++) {
+            for (let i = 0; i < absenceRank.length - count; i++) {
+                numberPool_cycle.push(cycleGroup[k]);
+            }
+        }
+        count++;
+    }
     return {
         minSum : minSum,
-        maxSum : maxSum
+        maxSum : maxSum,
+        numberPool_cycle : numberPool_cycle
     }
 }
 
 /* ===== local functions ===== */
 
-function getCycles(appearances) {
+async function __getHistory() {
+    return (await historyDao.selectAllHistory()).map(e => combParser.parseHistory(e));
+}
+
+function getCycles(appearances, lastGame) {
     const reducer = (acc, cur) => acc + cur;
     let maxConsecutiveAppear = 0;
     let maxAbsence = 0;
@@ -103,7 +114,9 @@ function getCycles(appearances) {
     return {
         maxConsecutiveAppear : maxConsecutiveAppear,
         maxAbsence : maxAbsence,
-        averageAppear : cycles.reduce(reducer) / cycles.length
+        averageAppear : cycles.reduce(reducer) / cycles.length,
+        lastAbsence : appearances[appearances.length - 1] - appearances[appearances.length - 2],
+        absenceTillNow : lastGame - appearances[appearances.length - 1]
     }
 }
 

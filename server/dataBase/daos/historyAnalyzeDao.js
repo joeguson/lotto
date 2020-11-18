@@ -13,7 +13,8 @@ exports.selectNumberAppearance = () => daoUtil.doQuery(
         select thi from history_view union all 
         select fou from history_view union all 
         select fif from history_view union all 
-        select six from history_view
+        select six from history_view union all
+        select bonus from history_view
     ) t on n.id = t.val 
     group by n.id 
     order by count asc`
@@ -24,3 +25,14 @@ exports.countDuplicateComb = () => daoUtil.doQuery(
     from history 
     group by comb_id having c > 1`
 )
+
+exports.isConsecutive = (comb) => daoUtil.doQuery(
+    `select id from consecutives 
+    where fir = ? AND
+    sec = ? AND
+    thi = ? AND
+    fou = ? AND 
+    fif = ? AND 
+    six = ?`,
+    comb
+);

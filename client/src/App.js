@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Combination from "./components/Combination";
-const serverUrl = "http://localhost:3001";
+import axios from "axios";
 
 class App extends React.Component {
     constructor(props) {
@@ -12,15 +12,12 @@ class App extends React.Component {
         };
     }
 
-    componentDidMount() {
-        fetch(serverUrl+"/api/home")
-            .then(res => res.json())
-            .then(data => {
-                    this.setState({
-                        combinations: data
-                    })
-                }
-            );
+    componentDidMount = () =>{
+        axios.get("/api/home")
+            .then((result) => {
+                console.log(result);
+                this.setState({combinations: result.data});
+            });
     }
 
     render() {

@@ -32,7 +32,7 @@ parseCombNumbersOnly = (comb) => {
 
 exports.parseHistory = (history) => {
     const historyObj = {};
-    historyObj.id = history.id;
+    historyObj.id = history.ids;
     historyObj.comb_id = history.comb_id;
 
     historyObj.combination = [];
@@ -42,6 +42,7 @@ exports.parseHistory = (history) => {
     historyObj.combination.push(history.fou);
     historyObj.combination.push(history.fif);
     historyObj.combination.push(history.six);
+    historyObj.combination.push(history.bonus);
 
     historyObj.sum = history.sum;
     historyObj.date = history.date;

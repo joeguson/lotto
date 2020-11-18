@@ -47,18 +47,17 @@ exports.getNumberPoolByAppearance = async () => {
         else appearanceCountMap.set(e.count, [e.id]);
     });
 
-    const numberArr = [];
+    const numberPool_appearance = [];
     for (let i = 0; i < appearanceCountArr.length; i++) {
         const count = appearanceCountArr[i];
         const numberGroup = appearanceCountMap.get(count);
         for (let j = 0; j < numberGroup.length; j++) {
             for (let k = 0; k < appearanceCountArr.length - i; k++) {
-                numberArr.push(numberGroup[j]);
+                numberPool_appearance.push(numberGroup[j]);
             }
         }
     }
-
-    return numberArr;
+    return numberPool_appearance;
 }
 
 
